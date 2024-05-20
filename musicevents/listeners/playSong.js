@@ -9,9 +9,7 @@ module.exports = {
 			if (queue.lastPlaying) {
 				await queue.lastPlaying.delete();
 			}
-		} catch (error) {
-			return;
-		}
+		} catch (error) {}
 
 		// Build Embed
 		const embed = new EmbedBuilder()
