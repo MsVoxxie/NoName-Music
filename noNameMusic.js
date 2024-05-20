@@ -24,7 +24,7 @@ client.distube = new DisTube(client, {
 	leaveOnFinish: true,
 	emitNewSongOnly: true,
 	emitAddSongWhenCreatingQueue: true,
-	emitAddListWhenCreatingQueue: false,
+	emitAddListWhenCreatingQueue: true,
 	plugins: [
 		new YtDlpPlugin(),
 		new SoundCloudPlugin(),
