@@ -4,7 +4,6 @@ module.exports = {
 	name: 'addList',
 	runType: 'on',
 	async execute(queue, playlist, client) {
-        console.log('Playlist added to queue');
 		const embed = new EmbedBuilder()
 			.setColor(client.color)
 			.setTitle('**Playlist added to Queue**')
