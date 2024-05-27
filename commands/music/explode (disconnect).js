@@ -20,7 +20,7 @@ module.exports = {
 
 		const channel = interaction.member.voice.channel;
 		const botChannel = interaction.guild.members.me.voice.channel;
-		
+
 		if (channel !== botChannel) return interaction.followUp("You're not in the same voice channel as me");
 		if (!channel) return interaction.followUp("You're not in a voice channel");
 
@@ -31,7 +31,7 @@ module.exports = {
 		if (queue) {
 			await client.distube.stop(interaction);
 		}
-		await voiceState.disconnect();
+		await client.distube.voices.leave(interaction);
 
 		// Build Embed
 		return interaction.followUp({ content: '💥' });

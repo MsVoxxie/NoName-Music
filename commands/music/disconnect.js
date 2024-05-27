@@ -31,7 +31,7 @@ module.exports = {
 		if (queue) {
 			await client.distube.stop(interaction);
 		}
-		await voiceState.disconnect();
+		await client.distube.voices.leave(interaction);
 
 		// Build Embed
 		const embed = new EmbedBuilder().setTitle(`**Disconnecting**`).setDescription(`${interaction.member} told me to disconnect.`).setColor(client.color).setTimestamp();

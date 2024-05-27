@@ -17,10 +17,10 @@ module.exports = {
 		const query = interaction.options.getString('query');
 
 		// Defer, Things take time.
-		await interaction.deferReply({ ephemeral: true });
+		await interaction.deferReply({});
 
 		// Let the user know the song is being queued
-		interaction.followUp({ content: `Searching for\n**<${query}>**...`, ephemeral: true });
+		interaction.followUp({ content: `Searching for\n**<${query}>**...` });
 
 		try {
 			await client.distube.play(channel, query, {
