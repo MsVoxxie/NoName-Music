@@ -3,7 +3,7 @@ const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('disc
 module.exports = {
 	data: new SlashCommandBuilder()
     .setName('skip')
-    .setDescription('Skip the current media')
+    .setDescription('Skip the current track.')
     .setDMPermission(false)
     .setDefaultMemberPermissions(PermissionFlagsBits.Connect),
 	options: {
@@ -18,7 +18,7 @@ module.exports = {
 		const channel = interaction.member.voice.channel;
 		if (!channel) return interaction.followUp("You're not in a voice channel");
 		const queue = await client.distube.getQueue(interaction);
-		if (!queue) return interaction.followUp('No media is currently playing');
+		if (!queue) return interaction.followUp('No music is currently playing');
 
 		// Check if there is only one song in the queue
 		if (queue.songs.length === 1) return interaction.followUp('There is only one song in the queue');

@@ -2,8 +2,8 @@ const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('disc
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('queue')
-		.setDescription('Return the current music queue.')
+		.setName('playing')
+		.setDescription('Return the currently playing song.')
 		.setDMPermission(false)
 		.setDefaultMemberPermissions(PermissionFlagsBits.Connect),
 	options: {
@@ -19,21 +19,17 @@ module.exports = {
 		const queue = await client.distube.getQueue(interaction);
 		if (!queue) return interaction.followUp('No music is currently playing!');
 
-		// Format Queue
-		let formattedQueue = queue.songs.map((song, index) => `**${index + 1}**. [${trim(song.name, 50)}](${song.url}) - \`${song.formattedDuration}\``);
-		// slice the queue if it's too long
-		if (formattedQueue.length > 20) {
-			const slicedQueue = formattedQueue.slice(0, 20);
-			slicedQueue.push(`\nAnd **${queue.songs.length - 20}** more...`);
-			formattedQueue = slicedQueue;
-		}
+		// Get the currently playing song
+		const song = queue.songs[0];
 
 		// Build Embed
 		const embed = new EmbedBuilder()
-			.setTitle(`**${interaction.guild.name}'s Current Queue**`)
-			.setDescription(formattedQueue.join('\n'))
+			.setTitle(`**Currently Playing**`)
+			.setDescription(`[${trim(song.name, 50)}](${song.url}) - \`${song.formattedDuration}\``)
 			.setColor(client.color)
-			.setFooter({ text: `Queue Duraction: ${queue.formattedDuration}` });
+			.setTimestamp();
+
+		// Send Embed
 		return interaction.followUp({ embeds: [embed] });
 	},
 };

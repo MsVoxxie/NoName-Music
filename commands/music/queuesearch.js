@@ -18,7 +18,7 @@ module.exports = {
 		// Checks
 		const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
 		const queue = await client.distube.getQueue(interaction);
-		if (!queue) return interaction.followUp('No media is currently playing!');
+		if (!queue) return interaction.followUp('No music is currently playing!');
 
 		// Get Search Term
 		const searchTerm = interaction.options.getString('search');
