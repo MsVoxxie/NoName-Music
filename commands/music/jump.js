@@ -31,7 +31,7 @@ module.exports = {
 		if (songNumber > queue.songs.length) return interaction.followUp('Invalid song number');
 
 		// Jump to the song
-		await client.distube.jump(interaction, songNumber);
+		await client.distube.jump(interaction, songNumber - 1);
 
 		// Build Embed
 		const embed = new EmbedBuilder()
