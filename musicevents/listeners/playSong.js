@@ -6,9 +6,8 @@ module.exports = {
 	async execute(queue, song, client) {
 		// Delete the last playing embed to clean up the channel
 		try {
-			if (queue.lastPlaying) {
-				await queue.lastPlaying.delete();
-			}
+			if (queue.lastPlaying) await queue.lastPlaying.delete();
+			if (queue.lastAdded) await queue.lastAdded.delete();
 		} catch (error) {}
 
 		// Build Embed

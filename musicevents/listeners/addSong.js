@@ -10,6 +10,6 @@ module.exports = {
 			.setImage(song.thumbnail)
 			.setDescription(`**Queued»** [${song.name}](${song.url})\n**Duration»** \`${song.formattedDuration}\`\n**Added By»** ${song.user}`);
 
-		queue.textChannel.send({ embeds: [embed] });
+		queue.lastAdded = await queue.textChannel.send({ embeds: [embed] });
 	},
 };
