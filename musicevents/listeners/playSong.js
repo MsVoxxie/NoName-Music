@@ -34,8 +34,8 @@ module.exports = {
 			await mostPlayed.updateOne(
 				{
 					guildId: queue.textChannel.guild.id,
-					'songs.songName': song.name,
-					'songs.songAuthor': song.uploader.name,
+					'songs.songName': song.name ? song.name : 'Unknown Name...',
+					'songs.songAuthor': song.uploader.name ? song.uploader.name : 'Unknown Author...',
 				},
 				{ $inc: { 'songs.$.playCount': 1 }, lastListened: Date.now() },
 				{ upsert: true }
@@ -48,9 +48,9 @@ module.exports = {
 				{
 					$addToSet: {
 						songs: {
-							songName: song.name,
-							songAuthor: song.uploader.name,
-							songUrl: song.url,
+							songName: song.name ? song.name : 'Unknown Name...',
+							songAuthor: song.uploader.name ? song.uploader.name : 'Unknown Author...',
+							songUrl: song.url ? song.url : 'Unknown URL...',
 							playCount: 1,
 						},
 					},
