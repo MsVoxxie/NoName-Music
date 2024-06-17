@@ -23,7 +23,7 @@ module.exports = {
 		if (botChannel) return interaction.followUp("I'm already in a voice channel");
 
 		// Check if the bot can join the channel
-		if (!channel.permissionsFor(interaction.guild.me).has(PermissionFlagsBits.Connect)) {
+		if (!channel.permissionsFor(interaction.guild.members.me).has(PermissionFlagsBits.Connect)) {
 			return interaction.followUp("I don't have permission to join that channel");
 		}
 
