@@ -11,6 +11,8 @@
     "distube": "^4.1.1",
     "dotenv": "^16.4.5",
     "fs": "^0.0.1-security",
+    "mongoose": "^8.4.1",
+    "node-cron": "^3.0.3",
     "opusscript": "^0.0.8",
     "path": "^0.12.7",
     "sodium-native": "^4.1.1"

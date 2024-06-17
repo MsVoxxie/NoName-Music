@@ -1,4 +1,5 @@
 const { EmbedBuilder } = require('discord.js');
+const mostPlayed = require('../../models/mostPlayed');
 
 module.exports = {
 	name: 'playSong',
@@ -21,5 +22,57 @@ module.exports = {
 		// Send Embed
 		const nowPlaying = await queue.textChannel.send({ embeds: [embed] });
 		queue.lastPlaying = nowPlaying;
+
+		// Check if the song is already in the database, if so increment the playCount by 1
+		const songExists = await mostPlayed.findOne({
+			guildId: queue.textChannel.guild.id,
+			'songs.songName': song.name,
+			'songs.songAuthor': song.uploader.name,
+		});
+
+		if (songExists) {
+			await mostPlayed.updateOne(
+				{
+					guildId: queue.textChannel.guild.id,
+					'songs.songName': song.name,
+					'songs.songAuthor': song.uploader.name,
+				},
+				{ $inc: { 'songs.$.playCount': 1 }, lastListened: Date.now() },
+				{ upsert: true }
+			);
+			console.log('Incremented playCount by 1');
+		} else {
+			// If the song is not in the database, add it to the database with a playCount of 1
+			await mostPlayed.updateOne(
+				{ guildId: queue.textChannel.guild.id },
+				{
+					$addToSet: {
+						songs: {
+							songName: song.name,
+							songAuthor: song.uploader.name,
+							songUrl: song.url,
+							playCount: 1,
+						},
+					},
+				},
+				{ upsert: true }
+			);
+			console.log('Added song to database');
+		}
+
+		// Update the database with the song that was played and increment the playCount by 1
+		// await mostPlayed.findOneAndUpdate(
+		// 	{ guildId: queue.textChannel.guild.id },
+		// 	{
+		// 		$addToSet: {
+		// 			songs: {
+		// 				songName: song.name,
+		// 				songAuthor: song.author,
+		// 				$inc: { playCount: 1 },
+		// 			},
+		// 		},
+		// 	},
+		// 	{ upsert: true }
+		// );
 	},
 };

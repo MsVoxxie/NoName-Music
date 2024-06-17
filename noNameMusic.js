@@ -2,6 +2,9 @@
 const dotenv = require('dotenv');
 dotenv.config();
 
+// Cron Job
+const cron = require('node-cron');
+
 // Discord Classes
 const { DisTube } = require('distube');
 const { SpotifyPlugin } = require('@distube/spotify');
@@ -42,8 +45,14 @@ client.events = new Collection();
 client.color = '#f3d600';
 
 // Run Loaders
+client.mongoose = require('./core/loaders/mongooseLoader');
 require('./core/loaders/commandLoader')(client);
 require('./core/loaders/eventLoader')(client);
 require('./core/loaders/musicLoader')(client);
+
+// Create a cron every day at midnight
+cron.schedule('0 0 * * *', async () => {
+	client.emit('deleteMostPlayed');
+});
 
 client.login(process.env.DISCORD_TOKEN);
