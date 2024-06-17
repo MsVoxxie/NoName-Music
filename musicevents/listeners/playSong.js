@@ -26,8 +26,7 @@ module.exports = {
 		// Check if the song is already in the database, if so increment the playCount by 1
 		const songExists = await mostPlayed.findOne({
 			guildId: queue.textChannel.guild.id,
-			'songs.songName': song.name,
-			'songs.songAuthor': song.uploader.name,
+			'songs.songUrl': song.url,
 		});
 
 		if (songExists) {
