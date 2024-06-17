@@ -10,6 +10,7 @@ const songSchema = new Schema({
 
 const mostPlayedSchema = new Schema({
 	guildId: { type: String, required: true },
+	totalPlays: { type: Number, default: 0, required: true },
 	songs: [songSchema],
 });
 

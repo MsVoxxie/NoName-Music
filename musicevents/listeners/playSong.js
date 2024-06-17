@@ -29,49 +29,40 @@ module.exports = {
 			'songs.songUrl': song.url,
 		});
 
-		if (songExists) {
-			await mostPlayed.updateOne(
-				{
-					guildId: queue.textChannel.guild.id,
-					'songs.songName': song.name ? song.name : 'Unknown Name...',
-					'songs.songAuthor': song.uploader.name ? song.uploader.name : 'Unknown Author...',
-				},
-				{ $inc: { 'songs.$.playCount': 1 }, lastListened: Date.now() },
-				{ upsert: true }
-			);
-			console.log('Incremented playCount by 1');
-		} else {
-			// If the song is not in the database, add it to the database with a playCount of 1
-			await mostPlayed.updateOne(
-				{ guildId: queue.textChannel.guild.id },
-				{
-					$addToSet: {
-						songs: {
-							songName: song.name ? song.name : 'Unknown Name...',
-							songAuthor: song.uploader.name ? song.uploader.name : 'Unknown Author...',
-							songUrl: song.url ? song.url : 'Unknown URL...',
-							playCount: 1,
+		try {
+			// Increment the totalPlays by 1
+			await mostPlayed.updateOne({ guildId: queue.textChannel.guild.id }, { $inc: { totalPlays: 1 } }, { upsert: true });
+
+			// If the song is in the database, increment the playCount by 1
+			if (songExists) {
+				await mostPlayed.updateOne(
+					{
+						guildId: queue.textChannel.guild.id,
+						'songs.songName': song.name ? song.name : 'Unknown Name...',
+						'songs.songAuthor': song.uploader.name ? song.uploader.name : 'Unknown Author...',
+					},
+					{ $inc: { 'songs.$.playCount': 1 }, lastListened: Date.now() },
+					{ upsert: true }
+				);
+			} else {
+				// If the song is not in the database, add it to the database with a playCount of 1
+				await mostPlayed.updateOne(
+					{ guildId: queue.textChannel.guild.id },
+					{
+						$addToSet: {
+							songs: {
+								songName: song.name ? song.name : 'Unknown Name...',
+								songAuthor: song.uploader.name ? song.uploader.name : 'Unknown Author...',
+								songUrl: song.url ? song.url : 'Unknown URL...',
+								playCount: 1,
+							},
 						},
 					},
-				},
-				{ upsert: true }
-			);
-			console.log('Added song to database');
+					{ upsert: true }
+				);
+			}
+		} catch (error) {
+			console.log('Error adding song to database: ', error);
 		}
-
-		// Update the database with the song that was played and increment the playCount by 1
-		// await mostPlayed.findOneAndUpdate(
-		// 	{ guildId: queue.textChannel.guild.id },
-		// 	{
-		// 		$addToSet: {
-		// 			songs: {
-		// 				songName: song.name,
-		// 				songAuthor: song.author,
-		// 				$inc: { playCount: 1 },
-		// 			},
-		// 		},
-		// 	},
-		// 	{ upsert: true }
-		// );
 	},
 };
