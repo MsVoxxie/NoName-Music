@@ -24,7 +24,7 @@ module.exports = {
 		if (!mostListened || !mostListened.songs.length) return interaction.followUp(`**${interaction.guild.name}** hasn't listened to any songs in the past 30 days.`);
 
 		// Sort the songs by the number of times they were listened to
-		const sortedSongs = mostListened.songs.sort((a, b) => b.timesPlayed - a.timesPlayed);
+		const sortedSongs = mostListened.songs.sort((a, b) => b.playCount - a.playCount);
 
 		// Get the top 10 songs
 		const top10 = sortedSongs.slice(0, 10);
