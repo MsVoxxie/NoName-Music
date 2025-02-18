@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, InteractionContextType } = require('discord.js');
+const { trimString } = require('../../functions/helpers/stringFormatters');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -15,12 +16,14 @@ module.exports = {
 		await interaction.deferReply();
 
 		// Checks
-		const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
 		const queue = await client.distube.getQueue(interaction);
 		if (!queue) return interaction.followUp('No music is currently playing!');
 
 		// Format Queue
-		let formattedQueue = queue.songs.map((song, index) => `**${index + 1}**. [${trim(song.name, 50)}](${song.url}) - \`${song.formattedDuration}\``);
+		let formattedQueue = queue.songs.map((song, index) => {
+			const trimmedName = trimString(song.name, 50); // Trimming function remains
+			return `**${index + 1}**. [${trimmedName}](${song.url}) - \`${song.formattedDuration}\``;
+		});
 		// slice the queue if it's too long
 		if (formattedQueue.length > 20) {
 			const slicedQueue = formattedQueue.slice(0, 20);
