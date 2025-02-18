@@ -36,7 +36,7 @@ client.events = new Collection();
 // Client Constants
 client.color = '#f3d600';
 client.maintenanceMode = false;
-client.lastPresenceUpdate = 0;
+// client.lastPresenceUpdate = 0; //! Disabled
 
 // Run Loaders
 client.mongoose = require('./core/loaders/mongooseLoader');
@@ -49,8 +49,9 @@ cron.schedule('0 0 * * *', async () => {
 	client.emit('deleteMostPlayed');
 });
 
-client.rest.on('rateLimited', (data) => {
-	console.log(`Rate limited: ${data}`);
+// Update the presence every 5 minutes
+cron.schedule('*/5 * * * *', async () => {
+	client.emit('updatePresence');
 });
 
 client.login(process.env.DISCORD_TOKEN);

@@ -2,15 +2,16 @@ const { ActivityType, PresenceUpdateStatus } = require('discord.js');
 
 module.exports = {
 	name: 'updatePresence',
-	runType: 'disabled', //! Has rate limiting issues :(
+	runType: 'infinity', //! Has rate limiting issues :(
 	async execute(client) {
 		// If the bot is in maintenance mode, do not update presence
 		if (client.maintenanceMode) return;
 
-		// Check if the last presence update was less than 5 minutes ago
-		const lastUpdated = client.lastPresenceUpdate || 0;
-		const currentTime = Date.now();
-		if (currentTime - lastUpdated < 5 * 60 * 1000) return;
+		//! Disabled
+		// Check if the last presence update was less than 3 minutes ago
+		// const lastUpdated = client.lastPresenceUpdate || 0;
+		// const currentTime = Date.now();
+		// if (currentTime - lastUpdated < 3 * 60 * 1000) return;
 
 		// Get all queues and calculate the total number of songs and their duration
 		const allQueues = await client.distube.queues.collection;

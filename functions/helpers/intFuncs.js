@@ -1,7 +1,8 @@
 async function followUp(interaction, embed, textChannel) {
 	let sent;
 	try {
-		if (Date.now() - interaction.createdTimestamp < 15 * 60 * 1000) {
+		// If the message is younger than 8 minutes, edit the reply, otherwise send a new message
+		if (Date.now() - interaction.createdTimestamp < 8 * 60 * 1000) {
 			try {
 				sent = await interaction.editReply({ embeds: [embed], fetchReply: true });
 			} catch (error) {
