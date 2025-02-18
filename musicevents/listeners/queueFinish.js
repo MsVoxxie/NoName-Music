@@ -5,10 +5,9 @@ module.exports = {
 	name: Events.FINISH,
 	runType: 'on',
 	async execute(queue, client) {
-		console.log(queue.lastAdded);
-		console.log(queue.lastPlaying);
-		
-		
+		// Emit updatePresence event
+		client.emit('updatePresence');
+
 		// Delete the last playing embed to clean up the channel
 		try {
 			if (queue.lastPlaying) await queue.lastPlaying.delete();

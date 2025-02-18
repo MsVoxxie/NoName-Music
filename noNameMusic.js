@@ -35,6 +35,8 @@ client.events = new Collection();
 
 // Client Constants
 client.color = '#f3d600';
+client.maintenanceMode = false;
+client.lastPresenceUpdate = 0;
 
 // Run Loaders
 client.mongoose = require('./core/loaders/mongooseLoader');
@@ -45,6 +47,10 @@ require('./core/loaders/musicLoader')(client);
 // Create a cron every day at midnight
 cron.schedule('0 0 * * *', async () => {
 	client.emit('deleteMostPlayed');
+});
+
+client.rest.on('rateLimited', (data) => {
+	console.log(`Rate limited: ${data}`);
 });
 
 client.login(process.env.DISCORD_TOKEN);

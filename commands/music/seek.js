@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, InteractionContextType } = require('discord.js');
+const { progressBar } = require('../../functions/helpers/stringFormatters');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -22,15 +23,18 @@ module.exports = {
 		const channel = interaction.member.voice.channel;
 		if (!channel) return interaction.followUp("You're not in a voice channel");
 		const queue = await client.distube.getQueue(interaction);
+		const song = queue.songs[0];
 		if (!queue) return interaction.followUp('No music is currently playing');
 
 		// Seek the song
+		const duration = song.stream.playFromSource ? song.duration : song.stream.song.duration;
+		if (seekSeconds > duration) return interaction.followUp('You cannot seek past the end of the song');
 		queue.seek(seekSeconds);
 
 		// Build Embed
 		const embed = new EmbedBuilder()
 			.setTitle(`**Song Seeked**`)
-			.setDescription(`${interaction.member} seeked to **${seekSeconds}** seconds into the song.`)
+			.setDescription(`${interaction.member} seeked **${seekSeconds}** seconds into the song.\n${progressBar(queue.currentTime, duration)}\n\`${queue.formattedCurrentTime} / ${song.formattedDuration}\``)
 			.setColor(client.color)
 			.setTimestamp();
 

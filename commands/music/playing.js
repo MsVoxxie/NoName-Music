@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, InteractionContextType } = require('discord.js');
+const { progressBar } = require('../../functions/helpers/stringFormatters');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -21,11 +22,12 @@ module.exports = {
 
 		// Get the currently playing song
 		const song = queue.songs[0];
+		const duration = song.stream.playFromSource ? song.duration : song.stream.song.duration;
 
 		// Build Embed
 		const embed = new EmbedBuilder()
 			.setTitle(`**Currently Playing**`)
-			.setDescription(`[${trim(song.name, 50)}](${song.url}) - \`${song.formattedDuration}\``)
+			.setDescription(`[${trim(song.name, 50)}](${song.url})\nRequested by: ${song.user}\n${progressBar(queue.currentTime, duration)}\n\`${queue.formattedCurrentTime} / ${song.formattedDuration}\``)
 			.setColor(client.color)
 			.setTimestamp();
 

@@ -7,10 +7,12 @@ module.exports = {
 	name: Events.PLAY_SONG,
 	runType: 'on',
 	async execute(queue, song, client) {
+		// Emit updatePresence event
+		client.emit('updatePresence');
+
 		// Delete the last playing embed to clean up the channel
 		try {
 			if (queue.lastPlaying) await queue.lastPlaying.delete();
-			if (queue.lastAdded) await queue.lastAdded.delete();
 		} catch (error) {}
 
 		// Build Embed
