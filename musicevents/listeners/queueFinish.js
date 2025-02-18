@@ -1,14 +1,18 @@
 const { EmbedBuilder } = require('discord.js');
+const { Events } = require('distube');
 
 module.exports = {
-	name: 'finish',
+	name: Events.FINISH,
 	runType: 'on',
 	async execute(queue, client) {
+		console.log(queue.lastAdded);
+		console.log(queue.lastPlaying);
+		
+		
 		// Delete the last playing embed to clean up the channel
 		try {
-			if (queue.lastPlaying) {
-				await queue.lastPlaying.delete();
-			}
+			if (queue.lastPlaying) await queue.lastPlaying.delete();
+			if (queue.lastAdded) await queue.lastAdded.delete();
 		} catch (error) {}
 
 		const embed = new EmbedBuilder().setColor(client.color).setTitle('**Queue Empty**').setDescription(`Queue is empty. Thanks for listening.`);
@@ -20,6 +24,8 @@ module.exports = {
 			embed.setDescription(`Queue is empty. Thanks for listening.\n\n**Repeat Mode Reset**`);
 		}
 
-		await queue.textChannel.send({ embeds: [embed] });
+		// Send Embed
+		await queue.textChannel?.send({ embeds: [embed] });
+		queue.voice.leave();
 	},
 };

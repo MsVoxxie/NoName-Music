@@ -1,10 +1,10 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, InteractionContextType } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('seek')
 		.setDescription('Seek to a specific time in the current song.')
-		.setDMPermission(false)
+		.setContexts(InteractionContextType.Guild)
 		.setDefaultMemberPermissions(PermissionFlagsBits.Connect)
 		.addIntegerOption((option) => option.setName('seconds').setDescription('Seconds into the song to seek to').setMinValue(1).setRequired(true)),
 	options: {

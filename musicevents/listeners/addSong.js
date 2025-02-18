@@ -1,7 +1,8 @@
 const { EmbedBuilder } = require('discord.js');
+const { Events } = require('distube');
 
 module.exports = {
-	name: 'addSong',
+	name: Events.ADD_SONG,
 	runType: 'on',
 	async execute(queue, song, client) {
 		const embed = new EmbedBuilder()
@@ -10,6 +11,8 @@ module.exports = {
 			.setImage(song.thumbnail)
 			.setDescription(`**Queued»** [${song.name}](${song.url})\n**Duration»** \`${song.formattedDuration}\`\n**Added By»** ${song.user}`);
 
-		queue.lastAdded = await queue.textChannel.send({ embeds: [embed] });
+		queue.lastAdded = await song.metadata.interaction.editReply({
+			embeds: [embed],
+		});
 	},
 };

@@ -1,7 +1,8 @@
 const { EmbedBuilder } = require('discord.js');
+const { Events } = require('distube');
 
 module.exports = {
-	name: 'addList',
+	name: Events.ADD_LIST,
 	runType: 'on',
 	async execute(queue, playlist, client) {
 		const embed = new EmbedBuilder()
@@ -10,6 +11,6 @@ module.exports = {
 			.setImage(playlist.thumbnail)
 			.setDescription(`**Queued»** [${playlist.name}](${playlist.url})\n**Song Count** \`${playlist.songs.length}\`\n**Added By»** ${playlist.user}`);
 
-		queue.textChannel.send({ embeds: [embed] });
+		playlist.metadata.interaction.editReply({ embeds: [embed] });
 	},
 };

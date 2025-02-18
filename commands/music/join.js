@@ -1,10 +1,10 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, InteractionContextType } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('join')
 		.setDescription('Join your current, or a specified voice channel')
-		.setDMPermission(false)
+		.setContexts(InteractionContextType.Guild)
 		.setDefaultMemberPermissions(PermissionFlagsBits.Connect)
 		.addChannelOption((option) => option.setName('channel').setDescription('The voice channel to join').setRequired(false)),
 	options: {

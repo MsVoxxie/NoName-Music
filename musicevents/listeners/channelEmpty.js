@@ -1,7 +1,8 @@
 const { EmbedBuilder } = require('discord.js');
+const { Events } = require('distube');
 
 module.exports = {
-	name: 'empty',
+	name: Events.EMPTY,
 	runType: 'on',
 	async execute(queue, client) {
 		const embed = new EmbedBuilder()

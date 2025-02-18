@@ -6,6 +6,10 @@ module.exports = {
 	runType: 'infinity',
 	async execute(client, interaction) {
 		if (interaction.isChatInputCommand() || interaction.isContextMenuCommand()) {
+			if (!interaction.user.id === '101789503634554880') {
+				return interaction.reply('I am currently undergoing a rewrite, Please stay tuned for updates.');
+			}
+
 			// Get command, return if no command found.
 			const command = interaction.client.commands.get(interaction.commandName);
 			if (!command) return Logger.error(`No command matching ${interaction.commandName} was found.`);

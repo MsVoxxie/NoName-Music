@@ -1,10 +1,10 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, InteractionContextType } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('jump')
 		.setDescription('Jump to a specific song in the queue.')
-		.setDMPermission(false)
+		.setContexts(InteractionContextType.Guild)
 		.setDefaultMemberPermissions(PermissionFlagsBits.Connect)
 		.addIntegerOption((option) => option.setName('song').setDescription('Song number to jump to').setMinValue(2).setRequired(true)),
 	options: {

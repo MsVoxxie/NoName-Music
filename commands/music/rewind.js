@@ -1,10 +1,10 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, InteractionContextType } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('rewind')
 		.setDescription('Rewind the current song.')
-		.setDMPermission(false)
+		.setContexts(InteractionContextType.Guild)
 		.setDefaultMemberPermissions(PermissionFlagsBits.Connect)
 		.addIntegerOption((option) => option.setName('seconds').setDescription('Number of seconds to rewind').setRequired(true)),
 	options: {

@@ -1,8 +1,10 @@
 const { EmbedBuilder } = require('discord.js');
 const mostPlayed = require('../../models/mostPlayed');
+const { followUp } = require('../../functions/helpers/intFuncs');
+const { Events } = require('distube');
 
 module.exports = {
-	name: 'playSong',
+	name: Events.PLAY_SONG,
 	runType: 'on',
 	async execute(queue, song, client) {
 		// Delete the last playing embed to clean up the channel
@@ -20,9 +22,9 @@ module.exports = {
 			.setFooter({ text: `Songs Remaining: ${queue.songs.length} | Total Duration: ${queue.formattedDuration}` });
 
 		// Send Embed
-		const nowPlaying = await queue.textChannel.send({ embeds: [embed] });
-		queue.lastPlaying = nowPlaying;
+		queue.lastPlaying = await followUp(song.metadata.interaction, embed, queue.textChannel);
 
+		//? This is all for the most played songs feature from here down
 		// Check if the song is already in the database, if so increment the playCount by 1
 		const songExists = await mostPlayed.findOne({
 			guildId: queue.textChannel.guild.id,

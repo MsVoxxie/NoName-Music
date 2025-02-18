@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, InteractionContextType } = require('discord.js');
 const { trimString } = require('../../functions/helpers/stringFormatters');
 const mostPlayed = require('../../models/mostPlayed');
 
@@ -6,7 +6,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('topsongs')
 		.setDescription('The most listened to songs in the server.')
-		.setDMPermission(false)
+		.setContexts(InteractionContextType.Guild)
 		.setDefaultMemberPermissions(PermissionFlagsBits.Connect),
 	options: {
 		devOnly: false,

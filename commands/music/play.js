@@ -1,11 +1,11 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, InteractionContextType } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('play')
 		.setDescription('Play some music')
 		.addStringOption((option) => option.setName('query').setDescription('Query to search for.').setRequired(true))
-		.setDMPermission(false)
+		.setContexts(InteractionContextType.Guild)
 		.setDefaultMemberPermissions(PermissionFlagsBits.Connect),
 	options: {
 		devOnly: false,
@@ -17,20 +17,17 @@ module.exports = {
 		const query = interaction.options.getString('query');
 
 		// Defer, Things take time.
-		await interaction.deferReply({});
+		await interaction.deferReply();
 
-		// Let the user know the song is being queued
-		interaction.followUp({ content: `Searching for\n**<${query}>**...` });
-
+		// Queue the song
 		try {
 			await client.distube.play(channel, query, {
 				member: interaction.member,
 				textChannel: interaction.channel,
-				interaction,
+				metadata: { interaction },
 			});
 
-			// Lower default volume
-			await client.distube.setVolume(interaction, 25);
+			// Catch any errors
 		} catch (error) {
 			return interaction.followUp({ content: `${error.message}` }).then((m) => {
 				setTimeout(() => m.delete(), 60 * 1000);
