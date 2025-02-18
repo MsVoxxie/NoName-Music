@@ -18,7 +18,7 @@ module.exports = {
 
 		// If there are no queues, set the presence to "Idle"
 		if (!allQueues.size) {
-			return await client.user.setPresence({ activities: [{ name: 'Idle', type: ActivityType.Watching }], status: PresenceUpdateStatus.Idle });
+			return await client.user.setPresence({ activities: [{ name: 'Idle', type: ActivityType.Custom }], status: PresenceUpdateStatus.Idle });
 		}
 
 		// If there are queues, set the presence to "Listening"
