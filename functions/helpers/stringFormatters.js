@@ -6,13 +6,12 @@ function trimString(str, length) {
 }
 
 function progressBar(current, total, size = 20) {
-	const percentage = Math.min(Math.max(current / total, 0), 1); // Clamps between 0-1
+	const percentage = Math.min(Math.max(current / total, 0), 1);
 	const filledLength = Math.round(size * percentage);
 	const emptyLength = size - filledLength - 1;
 
-	// Create the progress bar with a filled square as an indicator
+	// Create the progress bar
 	const bar = `⟪${'▬'.repeat(filledLength)}▽${'▬'.repeat(Math.max(emptyLength, 0))}⟫`;
-
 	return `${bar} ${Math.round(percentage * 100)}%`;
 }
 

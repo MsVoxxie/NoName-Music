@@ -16,6 +16,10 @@ module.exports = {
 		if (!channel) return interaction.reply("You're not in a voice channel.");
 		const query = interaction.options.getString('query');
 
+		// This regex checks for youtube URLs and captures the start time if present
+		const youtubeTimeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=[\w-]+|youtu\.be\/[\w-]+)(?:[^\s]*?[&?])t=(\d+)/;
+		const youtubeStartTime = query.match(youtubeTimeRegex)?.[1] || null;
+
 		// Defer, Things take time.
 		await interaction.deferReply();
 
@@ -24,7 +28,7 @@ module.exports = {
 			await client.distube.play(channel, query, {
 				member: interaction.member,
 				textChannel: interaction.channel,
-				metadata: { interaction },
+				metadata: { interaction, autoSeek: youtubeStartTime },
 			});
 
 			// Catch any errors

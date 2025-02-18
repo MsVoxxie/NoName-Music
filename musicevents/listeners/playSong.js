@@ -23,6 +23,14 @@ module.exports = {
 			.setDescription(`**Playing»** [${song.name}](${song.url})\n**Duration»** \`${song.formattedDuration}\`\n**Requested By»** ${song.user}`)
 			.setFooter({ text: `Songs Remaining: ${queue.songs.length} | Total Duration: ${queue.formattedDuration}` });
 
+		// Check if the sond has an autoSeek parameter
+		if (song.metadata.autoSeek) {
+			embed.setDescription(
+				`**Playing»** [${song.name}](${song.url})\n**Duration»** \`${song.formattedDuration}\`\n**Auto Seek»** \`${song.metadata.autoSeek}\`s\n**Requested By»** ${song.user}`
+			);
+			await queue.seek(Number(song.metadata.autoSeek));
+		}
+
 		// Send Embed
 		queue.lastPlaying = await followUp(song.metadata.interaction, embed, queue.textChannel);
 
