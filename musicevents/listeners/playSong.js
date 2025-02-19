@@ -23,8 +23,8 @@ module.exports = {
 			.setDescription(`**Playing»** [${song.name}](${song.url})\n**Duration»** \`${song.formattedDuration}\`\n**Requested By»** ${song.user}`)
 			.setFooter({ text: `Songs Remaining: ${queue.songs.length} | Total Duration: ${queue.formattedDuration}` });
 
-		// Check if the sond has an autoSeek parameter
-		if (song.metadata.autoSeek) {
+		// Check if the song has an autoSeek parameter and autoplay is disabled
+		if (song.metadata.autoSeek && !queue.autoplay) {
 			embed.setDescription(
 				`**Playing»** [${song.name}](${song.url})\n**Duration»** \`${song.formattedDuration}\`\n**Auto Seek»** \`${song.metadata.autoSeek}\`s\n**Requested By»** ${song.user}`
 			);
@@ -33,6 +33,41 @@ module.exports = {
 
 		// Send Embed
 		queue.lastPlaying = await followUp(song.metadata.interaction, embed, queue.textChannel);
+
+		//! EXPERIMENTAL
+		//! Song Volume Fade
+		//! Intented to emulate Spotify's volume fade out effect
+
+		// // If the volume is not 25, reset it to 25
+		// if (queue.volume !== 25) {
+		// 	queue.setVolume(25);
+		// }
+
+		// const fadeDuration = 7; // Time (seconds) before the song ends to start fading
+		// const intervalTime = 500; // Adjust volume every 500ms (0.5s)
+		// const steps = (fadeDuration * 1000) / intervalTime;
+		// let currentVolume = queue.volume; // Store the original volume
+
+		// const startFadeTime = song.duration - fadeDuration;
+		// if (startFadeTime <= 0) return; // Avoid issues if song is too short
+
+		// // Schedule the fade-out effect
+		// setTimeout(() => {
+		// 	console.log(`Fading out volume for ${queue.textChannel.guild.name} in ${fadeDuration} seconds...`);
+
+		// 	let step = 0;
+		// 	const fadeInterval = setInterval(() => {
+		// 		console.log(`Fading out step ${step + 1}/${steps}...`);
+
+		// 		step++;
+		// 		const newVolume = currentVolume * (1 - step / steps);
+		// 		queue.setVolume(Math.max(newVolume, 0)); // Prevent negative volume
+
+		// 		if (step >= steps) {
+		// 			clearInterval(fadeInterval); // Stop fading at the end
+		// 		}
+		// 	}, intervalTime);
+		// }, startFadeTime * 1000); // Delay execution until near the end of the song
 
 		//? This is all for the most played songs feature from here down
 		// Check if the song is already in the database, if so increment the playCount by 1
