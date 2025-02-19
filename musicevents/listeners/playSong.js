@@ -3,6 +3,22 @@ const mostPlayed = require('../../models/mostPlayed');
 const { followUp } = require('../../functions/helpers/intFuncs');
 const { Events } = require('distube');
 
+// Global variable to store fade data
+const queueTrackers = new Map(); // Store fade data per queue
+const defaultVolume = 25; // Default volume after fading
+
+const stopFade = (queue) => {
+	if (!queue || !queueTrackers.has(queue.id)) return;
+
+	const { progressCheck } = queueTrackers.get(queue.id);
+	if (progressCheck) {
+		clearInterval(progressCheck);
+	}
+
+	queue.setVolume(defaultVolume); // Reset volume
+	queueTrackers.delete(queue.id); // Clean up tracker
+};
+
 module.exports = {
 	name: Events.PLAY_SONG,
 	runType: 'on',
@@ -38,36 +54,52 @@ module.exports = {
 		//! Song Volume Fade
 		//! Intented to emulate Spotify's volume fade out effect
 
-		// // If the volume is not 25, reset it to 25
-		// if (queue.volume !== 25) {
-		// 	queue.setVolume(25);
-		// }
+		const fadeDuration = 7; // Seconds before song ends to start fading
+		const fadeSteps = 25; // Smoothness of the fade, higher = smoother
+		const fadeInterval = (fadeDuration * 1000) / fadeSteps;
+		const k = 0.215; // Decay, higher = faster fade
+		let currentVolume = queue.volume;
 
-		// const fadeDuration = 7; // Time (seconds) before the song ends to start fading
-		// const intervalTime = 500; // Adjust volume every 500ms (0.5s)
-		// const steps = (fadeDuration * 1000) / intervalTime;
-		// let currentVolume = queue.volume; // Store the original volume
+		if (queueTrackers.has(queue.id)) {
+			stopFade(queue); // Stop any existing fade for this queue
+		}
 
-		// const startFadeTime = song.duration - fadeDuration;
-		// if (startFadeTime <= 0) return; // Avoid issues if song is too short
+		queueTrackers.set(queue.id, { progressCheck: null, fadeActive: false });
 
-		// // Schedule the fade-out effect
-		// setTimeout(() => {
-		// 	console.log(`Fading out volume for ${queue.textChannel.guild.name} in ${fadeDuration} seconds...`);
+		const fadeOut = async () => {
+			const tracker = queueTrackers.get(queue.id);
+			if (!tracker || tracker.fadeActive) return;
+			tracker.fadeActive = true;
 
-		// 	let step = 0;
-		// 	const fadeInterval = setInterval(() => {
-		// 		console.log(`Fading out step ${step + 1}/${steps}...`);
+			for (let step = 0; step <= fadeSteps; step++) {
+				if (!queue.songs[0] || queue.currentTime >= song.duration - 0.5) break;
 
-		// 		step++;
-		// 		const newVolume = currentVolume * (1 - step / steps);
-		// 		queue.setVolume(Math.max(newVolume, 0)); // Prevent negative volume
+				const newVolume = currentVolume * Math.exp(-k * step);
+				queue.setVolume(Math.max(newVolume, 1)); // Prevent full silence
+				await new Promise((res) => setTimeout(res, fadeInterval));
+			}
 
-		// 		if (step >= steps) {
-		// 			clearInterval(fadeInterval); // Stop fading at the end
-		// 		}
-		// 	}, intervalTime);
-		// }, startFadeTime * 1000); // Delay execution until near the end of the song
+			tracker.fadeActive = false;
+		};
+
+		// Monitor song progress every second
+		const progressCheck = setInterval(() => {
+			const tracker = queueTrackers.get(queue.id);
+			if (!tracker) return;
+
+			if (!queue.songs[0]) {
+				stopFade(queue);
+				return;
+			}
+
+			const timeLeft = song.duration - queue.currentTime;
+			if (timeLeft <= fadeDuration && !tracker.fadeActive) {
+				fadeOut();
+			}
+		}, 1000);
+
+		// Save tracker for this queue
+		queueTrackers.set(queue.id, { progressCheck, fadeActive: false });
 
 		//? This is all for the most played songs feature from here down
 		// Check if the song is already in the database, if so increment the playCount by 1
@@ -112,4 +144,5 @@ module.exports = {
 			console.log('Error adding song to database: ', error);
 		}
 	},
+	stopFade, // Export stopFade properly
 };
