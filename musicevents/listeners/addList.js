@@ -11,6 +11,6 @@ module.exports = {
 			.setImage(playlist.thumbnail)
 			.setDescription(`**Queued»** [${playlist.name}](${playlist.url})\n**Song Count** \`${playlist.songs.length}\`\n**Added By»** ${playlist.user}`);
 
-		playlist.metadata.interaction.editReply({ embeds: [embed] });
+		queue.lastAdded = await playlist.metadata.interaction.editReply({ embeds: [embed] });
 	},
 };

@@ -12,7 +12,7 @@ module.exports = {
 
 		// Delete the last playing embed to clean up the channel
 		try {
-			if (queue.lastPlaying != queue.lastPlaying) await queue.lastPlaying.delete();
+			if (queue.lastPlaying) await queue.lastPlaying.delete();
 		} catch (error) {}
 
 		// Build Embed
