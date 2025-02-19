@@ -5,50 +5,47 @@ const mostPlayed = require('../../models/mostPlayed');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('topsongs')
-		.setDescription('The most listened to songs in the server.')
+		.setDescription('Displays the most listened-to songs in the server.')
 		.setContexts(InteractionContextType.Guild)
-		.setDefaultMemberPermissions(PermissionFlagsBits.Connect),
-	options: {
-		devOnly: false,
-		disabled: false,
-	},
+		.setDefaultMemberPermissions(PermissionFlagsBits.SendMessages),
+	options: { devOnly: false, disabled: false },
+
 	async execute(client, interaction) {
-		// Defer, Things take time.
 		await interaction.deferReply();
 
-		// Zero space character
-		const zW = ' ';
-
-		// Get the most listened to songs
+		const zW = ' '; // Zero-width space
 		const mostListened = await mostPlayed.findOne({ guildId: interaction.guild.id }).lean();
-		if (!mostListened || !mostListened.songs.length) return interaction.followUp(`**${interaction.guild.name}** hasn't listened to any songs in the past 30 days.`);
+		if (!mostListened?.songs?.length) {
+			return interaction.followUp(`**${interaction.guild.name}** hasn't listened to any songs in the past 30 days.`);
+		}
 
-		// Sort the songs by the number of times they were listened to
 		const sortedSongs = mostListened.songs.sort((a, b) => b.playCount - a.playCount);
-
-		// Get the top 10 songs
-		const top10 = sortedSongs.slice(0, 10);
-
-		// Format the song names
-		const songNames = top10.map((song, i) => {
-			// Make most plays a crown otherwise be i
-			let mostPlays = '';
-			if (i === 0) mostPlays = '🏅';
-			else mostPlays = `**${zW}${i + 1}.**`;
-			// Return the formatted string
-			return `${mostPlays} [${trimString(song.songName, 25)}](${song.songUrl}) **-** **${song.playCount}** plays`;
+		let songNames = sortedSongs.slice(0, 15).map((song, i) => {
+			const rank = i === 0 ? '🏅' : `**${zW}${i + 1}.**`;
+			return `${rank} [${trimString(song.songName, 25)}](${song.songUrl}) **- ${song.playCount}** plays`;
 		});
 
-		// Create the embed
+		// Ensure the text doesn't exceed Discord's 1024-char limit per field
+		let fields = [];
+		let chunk = '';
+		for (let line of songNames) {
+			if ((chunk + '\n' + line).length > 1024) {
+				fields.push({ name: zW, value: chunk });
+				chunk = line;
+			} else {
+				chunk += `\n${line}`;
+			}
+		}
+		if (chunk) fields.push({ name: zW, value: chunk });
+
 		const embed = new EmbedBuilder()
-			.setTitle(`**${interaction.guild.name}**'s Most Listened To Songs`)
+			.setTitle(`${interaction.guild.name}'s Most Listened To Songs`)
 			.setThumbnail(interaction.guild.iconURL())
 			.setColor(client.color)
 			.setTimestamp()
 			.setFooter({ text: `Total Plays • ${mostListened.totalPlays}` })
-			.addFields({ name: 'Top songs - Prev 30 Days', value: songNames.join('\n'), inline: true });
+			.addFields(fields);
 
-		// Send the embed
 		await interaction.followUp({ embeds: [embed] });
 	},
 };
