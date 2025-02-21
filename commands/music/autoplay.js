@@ -23,7 +23,7 @@ module.exports = {
 		// Build Embed
 		const embed = new EmbedBuilder()
 			.setTitle(`**Autoplay**`)
-			.setDescription(`${interaction.member} toggled autoplay for the guild.\n**Autoplay is**: \`${client.distube.toggleAutoplay(interaction) ? 'On' : 'Off'}\``)
+			.setDescription(`${interaction.member} has turned autoplay \`${client.distube.toggleAutoplay(interaction) ? 'on' : 'off'}\``)
 			.setColor(client.color)
 			.setTimestamp();
 

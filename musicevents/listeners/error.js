@@ -1,7 +1,6 @@
 const { EmbedBuilder } = require('discord.js');
 const { Events } = require('distube');
 const { followUp } = require('../../functions/helpers/intFuncs');
-const { stopFade } = require('./playSong');
 
 module.exports = {
 	name: Events.ERROR,
@@ -16,9 +15,5 @@ module.exports = {
 		} else {
 			console.error(error);
 		}
-
-		// Stop and fades
-		stopFade(queue);
-		queue.setVolume(25);
 	},
 };
