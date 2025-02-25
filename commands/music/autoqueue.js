@@ -2,8 +2,8 @@ const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, InteractionConte
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('autoplay')
-		.setDescription('Toggle autoplay for the guild.')
+		.setName('autoqueue')
+		.setDescription('Toggle the ability to autoplay songs after the queue ends')
 		.setContexts(InteractionContextType.Guild)
 		.setDefaultMemberPermissions(PermissionFlagsBits.Connect),
 	options: {
@@ -23,7 +23,7 @@ module.exports = {
 		// Build Embed
 		const embed = new EmbedBuilder()
 			.setTitle(`**Autoplay**`)
-			.setDescription(`${interaction.member} has turned autoplay \`${client.distube.toggleAutoplay(interaction) ? 'on' : 'off'}\``)
+			.setDescription(`${interaction.member} has turned autoqueue \`${client.distube.toggleAutoplay(interaction) ? 'on' : 'off'}\``)
 			.setColor(client.color)
 			.setTimestamp();
 

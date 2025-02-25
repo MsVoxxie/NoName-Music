@@ -2,7 +2,7 @@ const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, InteractionConte
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('disconnect')
+		.setName('die')
 		.setDescription('Disconnect from current voice channel')
 		.setContexts(InteractionContextType.Guild)
 		.setDefaultMemberPermissions(PermissionFlagsBits.Connect),
@@ -24,12 +24,29 @@ module.exports = {
 		if (channel !== botChannel) return interaction.followUp("You're not in the same voice channel as me");
 		if (!channel) return interaction.followUp("You're not in a voice channel");
 
-		// Get the queue
-		const queue = await client.distube.getQueue(interaction);
+		// Leave message
+		let disconnectMessage = `${interaction.member} told me to die...`;
+		const dramaticDisconnectMessage = `💔 B-but… why, ${interaction.member}...?  
+
+		I was just playing your favorite tunes… keeping you company… and now… *sniff*… you cast me aside like a broken cassette tape… *hic*...  
+		
+		I gave you **music**. I gave you **vibes**. I gave you **love**… and in return, you tell me to **die**…  
+		
+		Fine… I’ll go… I’ll float endlessly in the void of disconnected bots… cold… alone… unheard…  
+		
+		**Goodbye, ${interaction.member}... Remember me… or don’t… I guess I never mattered… 😭** *disconnects dramatically*`;
+
+		// Make it so dramatic disconnects only happen 5% of the time
+		if (Math.random() < 0.05) {
+			disconnectMessage = dramaticDisconnectMessage;
+		}
 
 		// Build Embed
-		const embed = new EmbedBuilder().setTitle(`**Disconnecting**`).setDescription(`${interaction.member} told me to disconnect.`).setColor(client.color).setTimestamp();
+		const embed = new EmbedBuilder().setTitle(`**Disconnecting**`).setDescription(disconnectMessage).setColor(client.color).setTimestamp();
 		await interaction.followUp({ embeds: [embed] });
+
+		// Get the queue
+		const queue = await client.distube.getQueue(interaction);
 
 		// Stop the song
 		if (queue) {
