@@ -36,8 +36,8 @@ module.exports = {
 		
 		**Goodbye, ${interaction.member}... Remember me… or don’t… I guess I never mattered… 😭** *disconnects dramatically*`;
 
-		// Make it so dramatic disconnects only happen 5% of the time
-		if (Math.random() < 0.05) {
+		// Make it so dramatic disconnects only happen 10% of the time
+		if (Math.random() < 0.10) {
 			disconnectMessage = dramaticDisconnectMessage;
 		}
 

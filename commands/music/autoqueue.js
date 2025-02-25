@@ -22,8 +22,9 @@ module.exports = {
 
 		// Build Embed
 		const embed = new EmbedBuilder()
-			.setTitle(`**Autoplay**`)
-			.setDescription(`${interaction.member} has turned autoqueue \`${client.distube.toggleAutoplay(interaction) ? 'on' : 'off'}\``)
+			.setTitle(`**Auto-Queue**`)
+			.setDescription(`${interaction.member} has turned auto-queue \`${client.distube.toggleAutoplay(interaction) ? 'on' : 'off'}\``)
+			.setFooter({ text: `I will now automatically play related songs after the queue ends` })
 			.setColor(client.color)
 			.setTimestamp();
 
