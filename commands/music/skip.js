@@ -2,10 +2,10 @@ const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, InteractionConte
 
 module.exports = {
 	data: new SlashCommandBuilder()
-    .setName('skip')
-    .setDescription('Skip the current track.')
-    .setContexts(InteractionContextType.Guild)
-    .setDefaultMemberPermissions(PermissionFlagsBits.Connect),
+		.setName('skip')
+		.setDescription('Skip the current track.')
+		.setContexts(InteractionContextType.Guild)
+		.setDefaultMemberPermissions(PermissionFlagsBits.Connect),
 	options: {
 		devOnly: false,
 		disabled: false,
@@ -21,18 +21,14 @@ module.exports = {
 		if (!queue) return interaction.followUp('No music is currently playing');
 
 		// Check if there is only one song in the queue
-		if (queue.songs.length === 1) return interaction.followUp('There is only one song in the queue');
+		if (queue.songs.length === 1 && !queue.autoplay) return interaction.followUp('There is only one song in the queue');
 
 		// Skip the song
 		await client.distube.skip(interaction);
 
 		// Build Embed
-		const embed = new EmbedBuilder()
-        .setTitle(`**Song Skipped**`)
-        .setDescription(`${interaction.member} skipped the current song.`)
-        .setColor(client.color)
-        .setTimestamp();
+		const embed = new EmbedBuilder().setTitle(`**Song Skipped**`).setDescription(`${interaction.member} skipped the current song.`).setColor(client.color).setTimestamp();
 
-		return interaction.followUp({ embeds: [embed] })
+		return interaction.followUp({ embeds: [embed] });
 	},
 };
