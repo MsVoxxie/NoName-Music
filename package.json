@@ -6,6 +6,8 @@
     "@distube/youtube": "^1.0.4",
     "@distube/yt-dlp": "^2.0.1",
     "@distube/ytdl-core": "^4.16.9",
+    "@nuclearplayer/ytdl-core": "^4.16.13",
+    "@snazzah/davey": "^0.1.7",
     "ascii-table": "^0.0.9",
     "colors": "^1.4.0",
     "discord.js": "^14.17.3",
@@ -17,6 +19,7 @@
     "opusscript": "^0.0.8",
     "path": "^0.12.7",
     "sodium-native": "^4.1.1",
-    "youtubei.js": "^13.4.0"
+    "youtubei.js": "^15.1.1",
+    "ytdl-core": "^4.11.5"
   }
 }

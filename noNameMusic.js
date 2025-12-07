@@ -10,7 +10,6 @@ const { DisTube } = require('distube');
 const { SpotifyPlugin } = require('@distube/spotify');
 const { SoundCloudPlugin } = require('@distube/soundcloud');
 const { YtDlpPlugin } = require('@distube/yt-dlp');
-const { YouTubePlugin } = require('@distube/youtube');
 const { DirectLinkPlugin } = require('@distube/direct-link');
 const { Client, Collection, GatewayIntentBits, Partials } = require('discord.js');
 require('events').EventEmitter.defaultMaxListeners = 16;
@@ -24,7 +23,7 @@ const client = new Client({
 
 // Music Client
 client.distube = new DisTube(client, {
-	plugins: [new YouTubePlugin(), new SpotifyPlugin(), new SoundCloudPlugin(), new DirectLinkPlugin(), new YtDlpPlugin()],
+	plugins: [new SpotifyPlugin(), new SoundCloudPlugin(), new DirectLinkPlugin(), new YtDlpPlugin({ update: true })],
 	emitAddSongWhenCreatingQueue: true,
 	emitAddListWhenCreatingQueue: true,
 });

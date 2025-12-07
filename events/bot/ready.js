@@ -1,4 +1,4 @@
-const { Events } = require('discord.js');
+const { Events, ActivityType, PresenceUpdateStatus } = require('discord.js');
 const Logger = require('../../functions/logging/logger');
 
 module.exports = {
@@ -8,5 +8,10 @@ module.exports = {
 		// Initialize the database
 		Logger.success(`Ready! Logged in as ${client.user.tag}`);
 		await client.mongoose.init();
+
+		await client.user.setPresence({
+			activities: [{ name: `Currently undergoing maintenance. Thanks, Youtube.`, type: ActivityType.Playing }],
+			status: PresenceUpdateStatus.Online,
+		});
 	},
 };
