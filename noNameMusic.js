@@ -7,9 +7,9 @@ const cron = require('node-cron');
 
 // Discord Classes
 const { DisTube } = require('distube');
+const { YtDlpPlugin } = require('@distube/yt-dlp');
 const { SpotifyPlugin } = require('@distube/spotify');
 const { SoundCloudPlugin } = require('@distube/soundcloud');
-const { YtDlpPlugin } = require('@distube/yt-dlp');
 const { DirectLinkPlugin } = require('@distube/direct-link');
 const { Client, Collection, GatewayIntentBits, Partials } = require('discord.js');
 require('events').EventEmitter.defaultMaxListeners = 16;
@@ -23,7 +23,7 @@ const client = new Client({
 
 // Music Client
 client.distube = new DisTube(client, {
-	plugins: [new SpotifyPlugin(), new SoundCloudPlugin(), new DirectLinkPlugin(), new YtDlpPlugin({ update: true })],
+	plugins: [new YtDlpPlugin({ update: false }), new SpotifyPlugin(), new SoundCloudPlugin(), new DirectLinkPlugin()],
 	emitAddSongWhenCreatingQueue: true,
 	emitAddListWhenCreatingQueue: true,
 });
@@ -35,7 +35,7 @@ client.events = new Collection();
 // Client Constants
 client.color = '#f3d600';
 client.maintenanceMode = false;
-// client.lastPresenceUpdate = 0; //! Disabled
+client.lastPresenceUpdate = 0;
 
 // Run Loaders
 client.mongoose = require('./core/loaders/mongooseLoader');

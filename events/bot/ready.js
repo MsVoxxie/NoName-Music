@@ -9,9 +9,13 @@ module.exports = {
 		Logger.success(`Ready! Logged in as ${client.user.tag}`);
 		await client.mongoose.init();
 
-		await client.user.setPresence({
-			activities: [{ name: `Currently undergoing maintenance. Thanks, Youtube.`, type: ActivityType.Playing }],
-			status: PresenceUpdateStatus.Online,
-		});
+		if (client.maintenanceMode) {
+			await client.user.setPresence({
+				activities: [{ name: `Currently undergoing maintenance. Thanks, Youtube.`, type: ActivityType.Playing }],
+				status: PresenceUpdateStatus.Online,
+			});
+		} else {
+			await client.emit('updatePresence');
+		}
 	},
 };
