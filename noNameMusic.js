@@ -7,7 +7,7 @@ const cron = require('node-cron');
 
 // Discord Classes
 const { DisTube } = require('distube');
-const { YtDlpPlugin } = require('@distube/yt-dlp');
+const { YtDlpPlugin } = require('./vendor/@distube/yt-dlp');
 const { SpotifyPlugin } = require('@distube/spotify');
 const { SoundCloudPlugin } = require('@distube/soundcloud');
 const { DirectLinkPlugin } = require('@distube/direct-link');
@@ -23,9 +23,28 @@ const client = new Client({
 
 // Music Client
 client.distube = new DisTube(client, {
-	plugins: [new YtDlpPlugin({ update: false }), new SpotifyPlugin(), new SoundCloudPlugin(), new DirectLinkPlugin()],
+	plugins: [
+		new SpotifyPlugin(),
+		new SoundCloudPlugin(),
+		new DirectLinkPlugin(),
+		new YtDlpPlugin({
+			// Use local wrapper script so we fully control flags
+			binaryPath: './yt-dlp-wrapper.sh',
+			update: false,
+			processTimeout: 15000,
+			// Let the plugin supply its own core args; we only
+			// force safe behavior via the wrapper itself.
+			args: [],
+		}),
+	],
 	emitAddSongWhenCreatingQueue: true,
 	emitAddListWhenCreatingQueue: true,
+	nsfw: true,
+});
+
+// Debug logging for DisTube events
+client.distube.on('debug', (message) => {
+	console.log(`[DisTube Debug] ${message}`);
 });
 
 // Define Collections
