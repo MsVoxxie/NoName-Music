@@ -36,7 +36,7 @@ module.exports = {
 			.setTitle(`**${interaction.guild.name}'s Current Queue**`)
 			.setDescription(formattedQueue.join('\n'))
 			.setColor(client.color)
-			.setFooter({ text: `Queue Duraction: ${queue.formattedDuration}` });
+			.setFooter({ text: `Queue Duration: ${queue.formattedDuration}` });
 		return interaction.followUp({ embeds: [embed] });
 	},
 };
